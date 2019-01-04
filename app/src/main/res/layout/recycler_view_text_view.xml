@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        android:id="@+id/recyclerCardView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:backgroundTint="#ffffff"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recyclerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"/>
+</android.support.v7.widget.CardView>

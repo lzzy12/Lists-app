@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:id="@+id/rootMain"
+        android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_margin="30dp">
+    <TextView
+            android:id="@+id/usageInst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/usage_info"/>
+    <android.support.v7.widget.RecyclerView
+         android:id="@+id/notesListView"
+         android:layout_marginTop="35dp"
+         android:layout_alignTop="@id/usageInst"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"/>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/add"
+            android:backgroundTint="@color/buttonTint"/>
+</RelativeLayout>
