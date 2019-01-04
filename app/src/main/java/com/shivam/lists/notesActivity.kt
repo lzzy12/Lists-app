@@ -1,4 +1,4 @@
-package com.shivam.notes
+package com.shivam.lists
 
 import android.app.Activity
 import android.content.Intent

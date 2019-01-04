@@ -1,4 +1,4 @@
-package com.shivam.notes
+package com.shivam.lists
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -14,7 +14,6 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.View
 import android.widget.*
 

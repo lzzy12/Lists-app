@@ -1,4 +1,4 @@
-package com.shivam.notes
+package com.shivam.lists
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
