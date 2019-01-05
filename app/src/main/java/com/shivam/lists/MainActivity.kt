@@ -75,16 +75,7 @@ class MainActivity : AppCompatActivity(){
         val context = this
         // Code for Detecting Long press on ListView Items
         mRecyclerView.addOnItemTouchListener(RecyclerTouchListener(this, mRecyclerView, object : RecyclerTouchListener.ClickListener {
-            override fun onLongClick(view: View?, position: Int) {
-                AlertDialog.Builder(context).setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Are you sure?")
-                        .setMessage("Do you want to delete this note?")
-                        .setPositiveButton("Yes") { _, _ ->
-                            notesArray.removeAt(position)
-                            arrayAdapter.notifyDataSetChanged()
-                        }
-                        .setNegativeButton("No", null)
-                        .show()            }
+            override fun onLongClick(view: View?, position: Int) {}
 
             override fun onClick(view: View, position: Int) {
                 val intent = Intent(applicationContext, notesActivity::class.java)
