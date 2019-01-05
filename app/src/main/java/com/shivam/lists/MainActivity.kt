@@ -1,7 +1,6 @@
 package com.shivam.lists
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -14,7 +13,6 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.google.gson.Gson
@@ -72,13 +70,12 @@ class MainActivity : AppCompatActivity(){
 
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(mRecyclerView)
-        val context = this
         // Code for Detecting Long press on ListView Items
         mRecyclerView.addOnItemTouchListener(RecyclerTouchListener(this, mRecyclerView, object : RecyclerTouchListener.ClickListener {
             override fun onLongClick(view: View?, position: Int) {}
 
             override fun onClick(view: View, position: Int) {
-                val intent = Intent(applicationContext, notesActivity::class.java)
+                val intent = Intent(applicationContext, NotesInputActivity::class.java)
                 arrayPos = position
                 intent.putExtra("note", ((view as CardView).getChildAt(0) as TextView).text.toString())
                 startActivityForResult(intent, 1)
@@ -86,15 +83,15 @@ class MainActivity : AppCompatActivity(){
             }
         }))
 
-        // Code for detect that Button has been clicked and launch notesActivity
+        // Code for detect that Button has been clicked and launch NotesInputActivity
         val floatingButton : FloatingActionButton = findViewById(R.id.floatingButton)
         floatingButton.setOnClickListener {
             arrayPos = null
-            val intent = Intent(applicationContext, notesActivity::class.java)
+            val intent = Intent(applicationContext, NotesInputActivity::class.java)
             startActivityForResult(intent, 1)
         }
     }
-    // Code for getting back data from notesActivity
+    // Code for getting back data from NotesInputActivity
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 1) {

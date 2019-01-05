@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.shivam.lists.notesActivity">
+        <activity android:name="com.shivam.lists.NotesInputActivity">
         </activity>
     </application>
 
