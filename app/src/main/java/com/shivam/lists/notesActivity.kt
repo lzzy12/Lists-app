@@ -30,7 +30,7 @@ class notesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
         noteEditText = findViewById(R.id.noteEditText)
-
+        noteEditText.requestFocus()
         // Finish Activity when Enter key is pressed on the keyboard
         noteEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {

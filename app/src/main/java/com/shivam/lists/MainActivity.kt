@@ -14,8 +14,12 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.View
 import android.widget.*
+import com.google.gson.Gson
+
+
 
 class MainActivity : AppCompatActivity(){
     private var notesArray : ArrayList<String> = ArrayList()
@@ -26,21 +30,14 @@ class MainActivity : AppCompatActivity(){
     var deletedItemIndex : Int? = null // For undo action of the Snackbar when a note is deleted
     var deletedItemString : String? = null   // For undo action of the Snackbar when a note is deleted
 
-    private fun <T> toMutableSet(arrayList: ArrayList<T>): MutableSet<T>{
-        val set : MutableSet<T> = mutableSetOf()
-        set.addAll(arrayList)
-        return set
-    }
-    private fun <T> toArrayList(mutableSet: MutableSet<T>): ArrayList<T>{
-        val arrayList = arrayListOf<T>()
-        arrayList.addAll(mutableSet)
-        return arrayList
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         sp = getSharedPreferences("notesPref", Context.MODE_PRIVATE)
-        notesArray = toArrayList(sp.getStringSet("notesArray", mutableSetOf<String>()))
+        val json = Gson()
+        notesArray = json.fromJson(sp.getString("notesArray", "[]"), notesArray.javaClass)
+
         // Setting up the RecyclerView
         arrayAdapter = myViewAdapter(notesArray)
         mLayoutManager = LinearLayoutManager(this)
@@ -127,7 +124,8 @@ class MainActivity : AppCompatActivity(){
 
     override fun onDestroy() {
         super.onDestroy()
-        sp.edit().putStringSet("notesArray", toMutableSet(notesArray)).apply()
+        val json = Gson()
+        sp.edit().putString("notesArray", json.toJson(notesArray)).apply()
     }
 }
 

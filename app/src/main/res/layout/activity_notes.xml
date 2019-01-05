@@ -13,7 +13,8 @@
             android:id="@+id/noteEditText"
             android:inputType="textLongMessage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:hint="@string/notes_enter_text"/>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/floatingButton"
