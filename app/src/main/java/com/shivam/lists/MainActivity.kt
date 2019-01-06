@@ -1,119 +1,91 @@
 package com.shivam.lists
 
 import android.app.Activity
-import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.Gson
 
+import kotlinx.android.synthetic.main.activity_main.*
 
-
-class MainActivity : AppCompatActivity(){
-    private var notesArray : ArrayList<String> = ArrayList()
-    private lateinit var arrayAdapter : RecyclerView.Adapter<*>
-    private lateinit var mLayoutManager : RecyclerView.LayoutManager
-    private var arrayPos : Int? = null
+class MainActivity : AppCompatActivity() {
+    private var listsArray = arrayListOf<String>()
+    private lateinit var recyclerViewAdapter: RecyclerView.Adapter<*>
     private lateinit var sp : SharedPreferences
-    var deletedItemIndex : Int? = null // For undo action of the Snackbar when a note is deleted
-    var deletedItemString : String? = null   // For undo action of the Snackbar when a note is deleted
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        sp = getSharedPreferences("notesPref", Context.MODE_PRIVATE)
-        val json = Gson()
-        notesArray = json.fromJson(sp.getString("notesArray", "[]"), notesArray.javaClass)
-
-        // Setting up the RecyclerView
-        arrayAdapter = myViewAdapter(notesArray)
-        mLayoutManager = LinearLayoutManager(this)
-        val mRecyclerView : RecyclerView = findViewById<RecyclerView>(R.id.notesListView).apply {
-            layoutManager = mLayoutManager
-            adapter = arrayAdapter
-            addItemDecoration(DividerItemDecoration(this.context, LinearLayoutManager.VERTICAL))
-        }
-        class undoListener : View.OnClickListener{
-            override fun onClick(v: View?) {
-                notesArray.add(deletedItemIndex!!, deletedItemString!!)
-                arrayAdapter.notifyDataSetChanged()
-
-            }
-
-        }
-        val simpleItemTouchCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
-            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
-                return true
-            }
-
-            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-                val index = p0.adapterPosition
-                deletedItemIndex = p0.adapterPosition
-                deletedItemString = notesArray[index]
-                notesArray.removeAt(index)
-                arrayAdapter.notifyDataSetChanged()
-                Snackbar.make(findViewById(R.id.rootMain), "1 Note deleted. Undo", Snackbar.LENGTH_LONG).setAction("Undo", undoListener()).show()
-            }
-
-        }
-
-        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(mRecyclerView)
-        // Code for Detecting Long press on ListView Items
-        mRecyclerView.addOnItemTouchListener(RecyclerTouchListener(this, mRecyclerView, object : RecyclerTouchListener.ClickListener {
-            override fun onLongClick(view: View?, position: Int) {}
-
-            override fun onClick(view: View, position: Int) {
-                val intent = Intent(applicationContext, NotesInputActivity::class.java)
-                arrayPos = position
-                intent.putExtra("note", ((view as CardView).getChildAt(0) as TextView).text.toString())
-                startActivityForResult(intent, 1)
-
-            }
-        }))
-
-        // Code for detect that Button has been clicked and launch NotesInputActivity
-        val floatingButton : FloatingActionButton = findViewById(R.id.floatingButton)
-        floatingButton.setOnClickListener {
-            arrayPos = null
-            val intent = Intent(applicationContext, NotesInputActivity::class.java)
-            startActivityForResult(intent, 1)
-        }
-    }
-    // Code for getting back data from NotesInputActivity
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                data!!
-                if (arrayPos == null)
-                {
-                    notesArray.add(data.getStringExtra("note"))
+    fun onClickAddButton(){
+        val input = EditText(this)
+        val builder = AlertDialog.Builder(this)
+        builder.apply {
+            setView(input)
+            setPositiveButton("OK"){ dialog: DialogInterface?, which: Int ->
+                if (input.text.isEmpty()){
+                    Toast.makeText(context, "List name cannot be empty", Toast.LENGTH_LONG).show()
                 }
                 else
                 {
-                    notesArray[arrayPos!!] = data.getStringExtra("note")
+                    val mIntent = Intent(applicationContext, ListActivity::class.java)
+                    listsArray.add(input.text.toString())
+                    recyclerViewAdapter.notifyDataSetChanged()
+                    val str = input.text.toString().replace(' ', '_')
+                    mIntent.putExtra("listName", str)
+                    startActivity(mIntent)
                 }
-                arrayAdapter.notifyDataSetChanged()
             }
+            setNegativeButton("Cancel", null)
+            setMessage("Enter name of the list")
+            setTitle("Name")
+            setIcon(android.R.drawable.ic_dialog_info)
         }
+        builder.show()
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        title = "Lists"
+        sp = getSharedPreferences("listsArray", Activity.MODE_PRIVATE)
+        listsArray = Gson().fromJson(sp.getString("array", "[]"), listsArray.javaClass)
+        Log.i("array", listsArray.toString())
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewMain)
+        recyclerViewAdapter = myViewAdapter(listsArray)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.apply {
+            adapter = recyclerViewAdapter
+            setLayoutManager(layoutManager)
+            addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
+            addOnItemTouchListener(RecyclerTouchListener(applicationContext, this, object : RecyclerTouchListener.ClickListener{
+                override fun onClick(view: View, position: Int) {
+                    val mIntent = Intent(applicationContext, ListActivity::class.java)
+                    mIntent.putExtra("listName", ((view as CardView).getChildAt(0) as TextView).text.toString())
+                    startActivity(mIntent)
+                }
+
+                override fun onLongClick(view: View?, position: Int) {}
+            }))
+        }
+
+        setSupportActionBar(toolbar)
+        fab.setOnClickListener { view ->
+            onClickAddButton()
+        }
+
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         val json = Gson()
-        sp.edit().putString("notesArray", json.toJson(notesArray)).apply()
+        sp.edit().putString("array", json.toJson(listsArray)).apply()
     }
 }
-

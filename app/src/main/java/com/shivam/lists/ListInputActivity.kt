@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 
-class NotesInputActivity : AppCompatActivity() {
+class ListInputActivity : AppCompatActivity() {
     lateinit var mIntent : Intent
     lateinit var noteEditText : EditText
     lateinit var floatingActionButton: FloatingActionButton

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
-    <string name="usage_info">Press the + icon to add a note or click on an existing note to edit it or swipe to delete.</string>
+    <string name="usage_info_lists">Press the + icon to add an item in the list or click on an existing item to edit it or swipe to delete.</string>
     <string name="notes_enter_text">Enter your content here</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="usage_main_activity">Press + icon to make a new List</string>
 </resources>
