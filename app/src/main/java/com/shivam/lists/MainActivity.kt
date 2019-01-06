@@ -24,6 +24,12 @@ class MainActivity : AppCompatActivity() {
     private var listsArray = arrayListOf<String>()
     private lateinit var recyclerViewAdapter: RecyclerView.Adapter<*>
     private lateinit var sp : SharedPreferences
+
+    fun startListActivity(extra : String){
+        val mIntent = Intent(applicationContext, ListActivity::class.java)
+        mIntent.putExtra("listName", extra)
+        startActivity(mIntent)
+    }
     fun onClickAddButton(){
         val input = EditText(this)
         val builder = AlertDialog.Builder(this)
@@ -35,12 +41,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 else
                 {
-                    val mIntent = Intent(applicationContext, ListActivity::class.java)
                     listsArray.add(input.text.toString())
                     recyclerViewAdapter.notifyDataSetChanged()
                     val str = input.text.toString().replace(' ', '_')
-                    mIntent.putExtra("listName", str)
-                    startActivity(mIntent)
+                    startListActivity(str)
                 }
             }
             setNegativeButton("Cancel", null)
@@ -66,9 +70,10 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
             addOnItemTouchListener(RecyclerTouchListener(applicationContext, this, object : RecyclerTouchListener.ClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val mIntent = Intent(applicationContext, ListActivity::class.java)
-                    mIntent.putExtra("listName", ((view as CardView).getChildAt(0) as TextView).text.toString())
-                    startActivity(mIntent)
+                    val data = ((view as CardView)
+                            .getChildAt(0) as TextView).text.toString()
+                            .replace(' ', '_')
+                    startListActivity(data)
                 }
 
                 override fun onLongClick(view: View?, position: Int) {}
